@@ -1,0 +1,11 @@
+variable "project_id" { type = string }
+variable "region" { type = string }
+variable "instance_name" { type = string }
+variable "database_version" { type = string }
+variable "tier" { type = string }
+variable "disk_size_gb" { type = number }
+variable "network_id" { type = string }
+variable "private_vpc_connect_peer" { type = any }
+variable "db_name" { type = string }
+variable "db_user" { type = string }
+variable "db_password" { type = string }
