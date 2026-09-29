@@ -57,3 +57,8 @@ variable "max_node_count" {
   type    = number
   default = 3
 }
+
+variable "gke_sa_id" {
+  description = "Service account ID for GKE worker nodes"
+  type        = string
+}

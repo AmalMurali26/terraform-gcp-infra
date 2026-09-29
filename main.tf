@@ -40,6 +40,7 @@ module "gke" {
   disk_size_gb           = var.node_disk_size_gb
   min_node_count         = var.min_node_count
   max_node_count         = var.max_node_count
+  gke_sa_id              = var.gke_sa_id
 }
 
 # Auto-generate database password (no secrets checked into git)
