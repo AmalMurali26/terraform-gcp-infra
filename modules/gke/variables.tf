@@ -11,8 +11,7 @@ variable "cluster_name" {
 }
 
 variable "node_locations" {
-  description = "Specific zones for node placement"
-  type        = list(string)
+  type = list(string)
 }
 
 variable "network" {
@@ -56,9 +55,4 @@ variable "min_node_count" {
 variable "max_node_count" {
   type    = number
   default = 3
-}
-
-variable "gke_sa_id" {
-  description = "Service account ID for GKE worker nodes"
-  type        = string
 }

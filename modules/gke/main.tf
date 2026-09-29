@@ -3,11 +3,15 @@ resource "google_container_cluster" "primary" {
   location = var.region
   project  = var.project_id
 
-  # Limits node distribution strictly to the 2 specified zones
   node_locations = var.node_locations
 
   remove_default_node_pool = true
   initial_node_count       = 1
+
+  # Overrides GCP default compute SA during initial pool creation
+  node_config {
+    service_account = var.node_service_account
+  }
 
   network    = var.network
   subnetwork = var.subnetwork
@@ -23,7 +27,6 @@ resource "google_container_cluster" "primary" {
     master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
-  # Enable cluster node autoscaling profile set to BALANCED
   cluster_autoscaling {
     autoscaling_profile = "BALANCED"
   }
@@ -43,7 +46,6 @@ resource "google_container_node_pool" "primary_nodes" {
   cluster  = google_container_cluster.primary.name
   project  = var.project_id
 
-  # Autoscaling configuration per zone (max 3 nodes)
   autoscaling {
     min_node_count = var.min_node_count
     max_node_count = var.max_node_count
