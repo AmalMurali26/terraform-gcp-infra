@@ -4,8 +4,6 @@ resource "google_sql_database_instance" "instance" {
   database_version = var.database_version
   project          = var.project_id
 
-  depends_on = [var.private_vpc_connect_peer]
-
   settings {
     tier              = var.tier
     disk_size         = var.disk_size_gb
@@ -22,18 +20,20 @@ resource "google_sql_database_instance" "instance" {
     }
   }
 
-  deletion_protection = false # Set true in strict enterprise production
+  deletion_protection = false
 }
 
 resource "google_sql_database" "database" {
-  name     = var.db_name
-  instance = google_sql_database_instance.instance.name
-  project  = var.project_id
+  name       = var.db_name
+  instance   = google_sql_database_instance.instance.name
+  project    = var.project_id
+  depends_on = [google_sql_database_instance.instance]
 }
 
 resource "google_sql_user" "users" {
-  name     = var.db_user
-  instance = google_sql_database_instance.instance.name
-  password = var.db_password
-  project  = var.project_id
+  name       = var.db_user
+  instance   = google_sql_database_instance.instance.name
+  password   = var.db_password
+  project    = var.project_id
+  depends_on = [google_sql_database_instance.instance]
 }
