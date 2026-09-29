@@ -115,9 +115,9 @@ variable "db_user" {
 }
 
 # Artifact Registry Variables
-variable "artifact_repo_id" {
-  description = "Repository name for Artifact Registry"
-  type        = string
+variable "artifact_repo_ids" {
+  description = "List of Artifact Registry repository names"
+  type        = list(string)
 }
 
 # IAM & Workload Identity Federation Variables

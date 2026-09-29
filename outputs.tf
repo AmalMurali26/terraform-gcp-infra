@@ -18,6 +18,6 @@ output "github_service_account" {
   value = module.wif_github.github_sa_email
 }
 
-output "artifact_registry_repo" {
-  value = module.artifact_registry.repository_url
+output "artifact_registry_repos" {
+  value = module.artifact_registry.repository_urls
 }

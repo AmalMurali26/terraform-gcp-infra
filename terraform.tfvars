@@ -28,7 +28,13 @@ db_name          = "app_db"
 db_user          = "app_user"
 
 # Artifact Registry
-artifact_repo_id = "prod-container-repo"
+#artifact_repo_id = "prod-container-repo"
+# Artifact Registry Repositories
+artifact_repo_ids = [
+  "frontend-repo",
+  "backend-repo"
+]
+
 
 # IAM & WIF
 gke_sa_id            = "gke-nodes-sa"
