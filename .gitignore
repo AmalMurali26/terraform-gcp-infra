@@ -6,12 +6,7 @@ crash.log
 crash.*.log
 
 # Sensitive variable files
-*.tfvars
-*.tfvars.json
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
+
 
 # CLI configuration
 .terraformrc
