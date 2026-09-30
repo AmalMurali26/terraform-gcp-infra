@@ -120,33 +120,60 @@ variable "artifact_repo_ids" {
   type        = list(string)
 }
 
-# IAM & Workload Identity Federation Variables
+# IAM & Workload Identity Federation Variables (2 SAs & 2 Pools)
 variable "gke_sa_id" {
-  description = "Service account ID for GKE worker nodes"
+  description = "Unified service account ID for GKE worker nodes, in-cluster pods, and app deployer"
   type        = string
+  default     = "gke-app-sa"
 }
 
 variable "github_actions_sa_id" {
-  description = "Service account ID assumed by GitHub Actions"
+  description = "Service account ID assumed by GitHub Actions for Terraform"
   type        = string
+  default     = "github-terraform-ci-sa"
 }
 
-variable "wif_pool_id" {
-  description = "Workload Identity Pool ID"
+variable "terraform_wif_pool_id" {
+  description = "Workload Identity Pool ID for Terraform CI/CD"
   type        = string
+  default     = "github-tf-pool"
+}
+
+variable "app_wif_pool_id" {
+  description = "Workload Identity Pool ID for Application CI/CD"
+  type        = string
+  default     = "github-app-pool"
 }
 
 variable "wif_provider_id" {
   description = "Workload Identity Provider ID"
   type        = string
+  default     = "github-provider"
 }
 
-variable "github_repo" {
-  description = "GitHub repository formatted as owner/repo"
+variable "github_repo_terraform" {
+  description = "GitHub repository (owner/repo) executing Terraform IaC"
   type        = string
 }
 
-# Secret Manager Extra Variables (Optional non-generated secrets)
+variable "github_repo_app" {
+  description = "GitHub repository (owner/repo) executing Application CI/CD"
+  type        = string
+}
+
+variable "k8s_namespace" {
+  description = "Kubernetes namespace for the workload"
+  type        = string
+  default     = "default"
+}
+
+variable "k8s_service_account_name" {
+  description = "Kubernetes ServiceAccount name inside the cluster"
+  type        = string
+  default     = "app-sa"
+}
+
+# Secret Manager Extra Variables
 variable "additional_secrets" {
   description = "Additional key-value secrets to store (do not add credentials here)"
   type        = map(string)

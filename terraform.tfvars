@@ -28,18 +28,21 @@ db_name          = "app_db"
 db_user          = "app_user"
 
 # Artifact Registry
-#artifact_repo_id = "prod-container-repo"
-# Artifact Registry Repositories
 artifact_repo_ids = [
   "frontend-repo",
   "backend-repo"
 ]
 
+# IAM & WIF (2 SAs & 2 Pools)
+gke_sa_id             = "gke-app-sa"
+github_actions_sa_id  = "github-terraform-ci-sa"
+terraform_wif_pool_id = "github-tf-pool"
+app_wif_pool_id       = "github-app-pool"
+wif_provider_id       = "github-provider"
 
-# IAM & WIF
-gke_sa_id            = "gke-nodes-sa"
-github_actions_sa_id = "github-deployer-sa"
-wif_pool_id          = "github-actions-pool-v2"
-wif_provider_id      = "github-provider"
-github_repo          = "my-org/my-app-repo"
+# Set your actual GitHub repository names here
+github_repo_terraform = "my-org/my-terraform-repo"
+github_repo_app       = "my-org/my-app-repo"
 
+k8s_namespace            = "default"
+k8s_service_account_name = "app-sa"

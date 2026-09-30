@@ -15,14 +15,17 @@ module "vpc" {
 module "wif_github" {
   source = "./modules/wif_github"
 
-  project_id           = var.project_id
-  gke_sa_id            = var.gke_sa_id
-  github_actions_sa_id = var.github_actions_sa_id
-  wif_pool_id          = var.wif_pool_id
-  wif_provider_id      = var.wif_provider_id
-  github_repo          = var.github_repo
+  project_id               = var.project_id
+  gke_sa_id                = var.gke_sa_id
+  github_actions_sa_id     = var.github_actions_sa_id
+  terraform_wif_pool_id    = var.terraform_wif_pool_id
+  app_wif_pool_id          = var.app_wif_pool_id
+  wif_provider_id          = var.wif_provider_id
+  github_repo_terraform    = var.github_repo_terraform
+  github_repo_app          = var.github_repo_app
+  k8s_namespace            = var.k8s_namespace
+  k8s_service_account_name = var.k8s_service_account_name
 }
-
 module "gke" {
   source = "./modules/gke"
 

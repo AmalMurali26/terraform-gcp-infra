@@ -10,12 +10,22 @@ output "cloudsql_private_ip" {
   value = module.cloudsql.private_ip_address
 }
 
-output "wif_provider_resource_name" {
-  value = module.wif_github.wif_provider_name
+# Terraform CI/CD Auth Outputs
+output "terraform_wif_provider_resource_name" {
+  value = module.wif_github.terraform_wif_provider_name
 }
 
-output "github_service_account" {
-  value = module.wif_github.github_sa_email
+output "terraform_service_account" {
+  value = module.wif_github.terraform_sa_email
+}
+
+# Application CI/CD & Cluster Auth Outputs
+output "app_wif_provider_resource_name" {
+  value = module.wif_github.app_wif_provider_name
+}
+
+output "app_service_account" {
+  value = module.wif_github.gke_node_sa_email
 }
 
 output "artifact_registry_repos" {
