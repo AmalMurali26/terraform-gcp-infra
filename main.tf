@@ -53,16 +53,16 @@ resource "random_password" "db_password" {
 module "cloudsql" {
   source = "./modules/cloudsql"
 
-  project_id       = var.project_id
-  region           = var.region
-  instance_name             = var.db_instance_name
-  database_version          = var.database_version
-  tier                      = var.db_tier
-  disk_size_gb              = var.db_disk_size_gb
-  db_name          = var.db_name
-  db_user          = var.db_user
+  project_id               = var.project_id
+  region                   = var.region
+  instance_name            = var.db_instance_name
+  database_version         = var.database_version
+  tier                     = var.db_tier
+  disk_size_gb             = var.db_disk_size_gb
+  db_name                  = var.db_name
+  db_user                  = var.db_user
   db_password              = random_password.db_password.result
-  network_id       = module.vpc.network_id
+  network_id               = module.vpc.network_id
   private_vpc_connect_peer = module.vpc.private_vpc_connection
 
   # Forces Terraform to wait until private IP allocation & peering are fully active
