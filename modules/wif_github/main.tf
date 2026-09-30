@@ -1,10 +1,11 @@
-# Service Account for GKE Nodes (Least Privilege)
+
 resource "google_service_account" "gke_node_sa" {
   account_id   = var.gke_sa_id
   display_name = "GKE Node Pool Service Account"
   project      = var.project_id
 }
 
+# Standard GKE logging & monitoring
 resource "google_project_iam_member" "gke_node_logs" {
   project = var.project_id
   role    = "roles/logging.logWriter"
@@ -23,21 +24,41 @@ resource "google_project_iam_member" "gke_node_monitoring" {
   member  = "serviceAccount:${google_service_account.gke_node_sa.email}"
 }
 
-# Service Account for GitHub Actions
+# Artifact Registry reader/writer: enables Argo CD to pull and runners to push images
+resource "google_project_iam_member" "gke_ar_writer" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.gke_node_sa.email}"
+}
+
+# Secret Manager accessor: enables pods/runners to read DB passwords & secrets
+resource "google_project_iam_member" "gke_secret_accessor" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.gke_node_sa.email}"
+}
+
+# Cloud SQL client: allows workloads in the cluster to reach Postgres
+resource "google_project_iam_member" "gke_cloudsql_client" {
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.gke_node_sa.email}"
+}
+
 resource "google_service_account" "github_sa" {
   account_id   = var.github_actions_sa_id
   display_name = "GitHub Actions CI/CD Deployment SA"
   project      = var.project_id
 }
 
-# WIF Pool
+# Workload Identity Pool
 resource "google_iam_workload_identity_pool" "pool" {
   workload_identity_pool_id = var.wif_pool_id
   display_name              = "GitHub Actions Pool"
   project                   = var.project_id
 }
 
-# WIF Provider for GitHub OIDC
+# Workload Identity Provider for GitHub OIDC
 resource "google_iam_workload_identity_pool_provider" "provider" {
   workload_identity_pool_id          = google_iam_workload_identity_pool.pool.workload_identity_pool_id
   workload_identity_pool_provider_id = var.wif_provider_id
@@ -58,7 +79,7 @@ resource "google_iam_workload_identity_pool_provider" "provider" {
   }
 }
 
-# Allow GitHub Actions repo identity to impersonate the GitHub Service Account
+# Allow GitHub Actions repository to impersonate the Terraform Automation SA
 resource "google_service_account_iam_member" "github_wif_binding" {
   service_account_id = google_service_account.github_sa.name
   role               = "roles/iam.workloadIdentityUser"
