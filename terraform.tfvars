@@ -41,8 +41,8 @@ app_wif_pool_id       = "github-app-pool"
 wif_provider_id       = "github-provider"
 
 # Set your actual GitHub repository names here
-github_repo_terraform = "my-org/my-terraform-repo"
-github_repo_app       = "my-org/my-app-repo"
+github_repo_terraform = "AmalMurali26/terraform-gcp-infra"
+github_repo_app       = "AmalMurali26/gitops-project-app"
 
 k8s_namespace            = "default"
 k8s_service_account_name = "app-sa"
