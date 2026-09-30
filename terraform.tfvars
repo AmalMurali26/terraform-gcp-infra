@@ -39,7 +39,7 @@ artifact_repo_ids = [
 # IAM & WIF
 gke_sa_id            = "gke-nodes-sa"
 github_actions_sa_id = "github-deployer-sa"
-wif_pool_id          = "github-actions-pool"
+wif_pool_id          = "github-actions-pool-v2"
 wif_provider_id      = "github-provider"
 github_repo          = "my-org/my-app-repo"
 
