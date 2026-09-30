@@ -21,19 +21,20 @@ resource "google_sql_database_instance" "instance" {
   }
 
   deletion_protection = false
+
+  # Ensures the VPC peering connection is 100% active before GCP tries to create the instance
+  depends_on = [var.private_vpc_connect_peer]
 }
 
 resource "google_sql_database" "database" {
-  name       = var.db_name
-  instance   = google_sql_database_instance.instance.name
-  project    = var.project_id
-  depends_on = [google_sql_database_instance.instance]
+  name     = var.db_name
+  instance = google_sql_database_instance.instance.name
+  project  = var.project_id
 }
 
 resource "google_sql_user" "users" {
-  name       = var.db_user
-  instance   = google_sql_database_instance.instance.name
-  password   = var.db_password
-  project    = var.project_id
-  depends_on = [google_sql_database_instance.instance]
+  name     = var.db_user
+  instance = google_sql_database_instance.instance.name
+  password = var.db_password
+  project  = var.project_id
 }
