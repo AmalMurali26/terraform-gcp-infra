@@ -1,11 +1,15 @@
 # ==============================================================================
-# SA 1 & POOL 1: TERRAFORM INFRASTRUCTURE PIPELINE
+# SA 1 & POOL 1: TERRAFORM INFRASTRUCTURE PIPELINE (PROTECTED)
 # ==============================================================================
 
 resource "google_service_account" "github_sa" {
   account_id   = var.github_actions_sa_id
   display_name = "GitHub Actions Terraform CI/CD SA"
   project      = var.project_id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Terraform IAM roles needed to manage GCP resources
@@ -17,7 +21,8 @@ resource "google_project_iam_member" "terraform_roles" {
     "roles/iam.serviceAccountAdmin",
     "roles/resourcemanager.projectIamAdmin",
     "roles/secretmanager.admin",
-    "roles/artifactregistry.admin"
+    "roles/artifactregistry.admin",
+    "roles/servicenetworking.networksAdmin"
   ])
 
   project = var.project_id
@@ -30,6 +35,10 @@ resource "google_iam_workload_identity_pool" "terraform_pool" {
   workload_identity_pool_id = var.terraform_wif_pool_id
   display_name              = "GitHub Actions Terraform Pool"
   project                   = var.project_id
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_iam_workload_identity_pool_provider" "terraform_provider" {
@@ -50,6 +59,10 @@ resource "google_iam_workload_identity_pool_provider" "terraform_provider" {
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Allow Terraform repo runner to impersonate github_sa
@@ -60,7 +73,7 @@ resource "google_service_account_iam_member" "terraform_wif_binding" {
 }
 
 # ==============================================================================
-# SA 2 & POOL 2: GKE NODES, APPLICATION WORKLOADS & APP CI/CD
+# SA 2 & POOL 2: GKE NODES, APPLICATION WORKLOADS & APP CI/CD (DESTROYABLE)
 # ==============================================================================
 
 resource "google_service_account" "gke_node_sa" {

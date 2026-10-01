@@ -1,22 +1,16 @@
-name: "Terraform Destroy"
+name: "Terraform Destroy App & Infra"
 
 on:
   workflow_dispatch:
-    inputs:
-      confirmation:
-        description: 'Type "destroy" to confirm tear down'
-        required: true
-        default: ''
 
 permissions:
-  contents: read
   id-token: write
+  contents: read
 
 jobs:
-  terraform-destroy:
-    name: "Tear Down Infrastructure"
+  destroy:
+    name: "Destroy Application & Cloud Infrastructure"
     runs-on: ubuntu-latest
-    if: github.event.inputs.confirmation == 'destroy'
 
     steps:
       - name: Checkout Code
@@ -25,16 +19,29 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
           service_account: ${{ secrets.GCP_SA_EMAIL }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.8.0"
+          terraform_version: "1.9.0"
 
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
+      - name: Destroy App Resources and Infrastructure
+        run: |
+          terraform destroy -auto-approve \
+            -target=module.wif_github.google_service_account_iam_member.gke_ksa_wif_binding \
+            -target=module.wif_github.google_service_account_iam_member.app_github_wif_binding \
+            -target=module.wif_github.google_project_iam_member.gke_roles \
+            -target=module.wif_github.google_iam_workload_identity_pool_provider.app_provider \
+            -target=module.wif_github.google_iam_workload_identity_pool.app_pool \
+            -target=module.wif_github.google_service_account.gke_node_sa \
+            -target=module.gke \
+            -target=module.cloudsql \
+            -target=module.artifact_registry \
+            -target=module.secrets \
+            -target=module.vpc
