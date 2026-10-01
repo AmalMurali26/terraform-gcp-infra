@@ -31,7 +31,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Destroy App Resources and Infrastructure
+      # Step 1: Destroy App, Compute, Database, and Artifact Registry
+      - name: Destroy App Resources and Database
         run: |
           terraform destroy -auto-approve \
             -target=module.wif_github.google_service_account_iam_member.gke_ksa_wif_binding \
@@ -43,5 +44,10 @@ jobs:
             -target=module.gke \
             -target=module.cloudsql \
             -target=module.artifact_registry \
-            -target=module.secrets \
+            -target=module.secrets
+
+      # Step 2: Destroy Network Infrastructure cleanly after dependencies are gone
+      - name: Destroy VPC Network
+        run: |
+          terraform destroy -auto-approve \
             -target=module.vpc
