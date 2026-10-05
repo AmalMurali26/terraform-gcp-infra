@@ -31,15 +31,13 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # Step 1: Destroy App, Compute, Database, and Artifact Registry
+      # Step 1: Destroy App Identity Bindings, App SA, Compute, DB & Registries
       - name: Destroy App Resources and Database
         run: |
           terraform destroy -auto-approve \
             -target=module.wif_github.google_service_account_iam_member.gke_ksa_wif_binding \
             -target=module.wif_github.google_service_account_iam_member.app_github_wif_binding \
             -target=module.wif_github.google_project_iam_member.gke_roles \
-            -target=module.wif_github.google_iam_workload_identity_pool_provider.app_provider \
-            -target=module.wif_github.google_iam_workload_identity_pool.app_pool \
             -target=module.wif_github.google_service_account.gke_node_sa \
             -target=module.gke \
             -target=module.cloudsql \
