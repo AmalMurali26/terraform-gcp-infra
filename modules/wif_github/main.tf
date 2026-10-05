@@ -18,6 +18,7 @@ resource "google_project_iam_member" "terraform_roles" {
     "roles/container.admin",
     "roles/cloudsql.admin",
     "roles/iam.serviceAccountAdmin",
+    "roles/iam.serviceAccountUser", # <--- ADD THIS
     "roles/resourcemanager.projectIamAdmin",
     "roles/secretmanager.admin",
     "roles/artifactregistry.admin",
